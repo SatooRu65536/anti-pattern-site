@@ -7,9 +7,11 @@ import {
   Text,
   Image,
   Icon,
+  Flex,
 } from "@chakra-ui/react";
 import { Item } from "./types";
 import { MdShoppingCart, MdAddShoppingCart } from "react-icons/md";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function ItemCard({
   id,
@@ -20,6 +22,26 @@ export default function ItemCard({
   addedCart,
   switchCartItem,
 }: Item & { addedCart: string[]; switchCartItem: Function }) {
+  const [count, setCount] = useState(0);
+
+  const swithCart = useCallback(() => {
+    switchCartItem(id);
+  }, [id, switchCartItem]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCount((prevCount) => {
+        console.log("call");
+        
+        if (prevCount > 0) return prevCount - 1;
+        else {
+          swithCart();
+          return 0;
+        }
+      });
+    }, 1000);
+  }, [swithCart]);
+
   return (
     <Card
       bg="white"
@@ -72,22 +94,28 @@ export default function ItemCard({
             ¥{price ? price.toLocaleString() : 330}
           </Heading>
 
-          <Icon
-            as={addedCart.includes(id) ? MdShoppingCart : MdAddShoppingCart}
-            boxSize="6"
-            color="blackAlpha.800"
-            bgColor="white"
-            borderRadius="50%"
-            h="12"
-            w="12"
-            p="3"
-            transition="all .3s"
-            position="absolute"
-            bottom="2"
-            left="4"
-            _hover={{ bgColor: "blackAlpha.100" }}
-            onClick={() => switchCartItem(id)}
-          />
+          <Flex position="absolute" bottom="2" left="4">
+            <Icon
+              as={addedCart.includes(id) ? MdShoppingCart : MdAddShoppingCart}
+              boxSize="6"
+              color="blackAlpha.800"
+              bgColor="white"
+              borderRadius="50%"
+              h="12"
+              w="12"
+              p="3"
+              transition="all .3s"
+              _hover={{ bgColor: "blackAlpha.100" }}
+              onClick={() => {
+                switchCartItem(id);
+                setCount(10);
+              }}
+            />
+
+            <Text p="3" display={count > 0 ? "block" : "none"}>
+              {count}
+            </Text>
+          </Flex>
         </Box>
       </CardBody>
     </Card>
