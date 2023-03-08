@@ -6,10 +6,20 @@ import {
   CardBody,
   Text,
   Image,
+  Icon,
 } from "@chakra-ui/react";
 import { Item } from "./types";
+import { MdShoppingCart, MdAddShoppingCart } from "react-icons/md";
 
-export default function ItemCard({ name, imgPath, detail, price }: Item) {
+export default function ItemCard({
+  id,
+  name,
+  imgPath,
+  detail,
+  price,
+  addedCart,
+  switchCartItem,
+}: Item & { addedCart: string[]; switchCartItem: Function }) {
   return (
     <Card
       bg="white"
@@ -49,19 +59,35 @@ export default function ItemCard({ name, imgPath, detail, price }: Item) {
       <CardBody p="0">
         <Box p="2">
           <Text
-            h="70px"
-            pt="2"
-            mb="4"
+            h="76px"
+            py="2"
             fontSize="sm"
             overflow="hidden"
             display="-webkit-box"
-            sx={{ "-webkit-box-orient": "vertical", "-webkit-line-clamp": "3" }}
+            sx={{ WebkitBoxOrient: "vertical", WebkitLineClamp: "3" }}
           >
             {detail ?? "とっても可愛いペンギンです"}
           </Text>
-          <Heading size="md" textAlign="end">
+          <Heading size="md" pt="3" textAlign="end">
             ¥{price ? price.toLocaleString() : 330}
           </Heading>
+
+          <Icon
+            as={addedCart.includes(id) ? MdShoppingCart : MdAddShoppingCart}
+            boxSize="6"
+            color="blackAlpha.800"
+            bgColor="white"
+            borderRadius="50%"
+            h="12"
+            w="12"
+            p="3"
+            transition="all .3s"
+            position="absolute"
+            bottom="2"
+            left="4"
+            _hover={{ bgColor: "blackAlpha.100" }}
+            onClick={() => switchCartItem(id)}
+          />
         </Box>
       </CardBody>
     </Card>
