@@ -80,7 +80,7 @@ const Page: NextPage = () => {
         <CardBody p="0">
           <Box p="2">
             <Text
-              h="76px"
+              h="74px"
               py="2"
               fontSize="sm"
               overflow="hidden"
@@ -132,7 +132,7 @@ const Page: NextPage = () => {
         })}
       </Grid>
 
-      <Flex>
+      <Flex my="10">
         <Spacer />
         <Text
           mr="5"
