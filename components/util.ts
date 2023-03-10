@@ -1,4 +1,5 @@
 import { Item } from "./types";
+import _ from "lodash";
 
 export const items: Item[] = [
   {
@@ -69,3 +70,5 @@ export const items: Item[] = [
     imgPath: "/item/bobpc.jpg",
 }
 ];
+
+export const itemsObj = _.keyBy(items, "id");

@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState } from "react";
 import type { NextPage } from "next";
 import Router from "next/router";
 import { Box, Flex, Grid, Spacer, Text } from "@chakra-ui/react";
@@ -23,12 +23,16 @@ const Page: NextPage = () => {
   function toPurchase() {
     const res = window.confirm("購入手続きに進みますか?");
 
-    if (res) Router.push({ pathname: "/purchase", query: { cart: addedCart } });
+    if (res)
+      Router.push(
+        { pathname: "/purchase", query: { cart: addedCart } },
+        "/purchase"
+      );
     else setAddedCart([]);
   }
 
   return (
-    <Box>
+    <Box minH="calc(100vh - 122px)">
       <Grid
         p="5"
         templateColumns="repeat(auto-fill, minmax(250px, 1fr))"

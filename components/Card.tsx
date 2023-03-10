@@ -42,7 +42,7 @@ const ItemCard = ({
           overflow="hidden"
           textOverflow="ellipsis"
         >
-          {name ?? "商品名"}
+          {name}
         </Heading>
       </CardHeader>
 
@@ -50,10 +50,7 @@ const ItemCard = ({
         w="100%"
         objectFit="cover"
         sx={{ aspectRatio: "16/9" }}
-        src={
-          imgPath ??
-          "https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-        }
+        src={imgPath}
         alt="item image"
       />
 
@@ -67,10 +64,10 @@ const ItemCard = ({
             display="-webkit-box"
             sx={{ WebkitBoxOrient: "vertical", WebkitLineClamp: "3" }}
           >
-            {detail ?? "とっても可愛いペンギンです"}
+            {detail}
           </Text>
           <Heading size="md" pt="3" textAlign="end">
-            ¥{price ? price.toLocaleString() : 330}
+            ¥{price.toLocaleString()}
           </Heading>
 
           <Icon
