@@ -58,7 +58,7 @@ const Page: NextPage = () => {
       return { id: itemId, qty: qty[i] };
     });
 
-    if (addedCart.length > 0 && typeof addedCart[0] === "number") {
+    if (qty.length > 0 && typeof qty[0] === "number") {
       window.alert("配送情報の入力に進みます");
 
       Router.push(
