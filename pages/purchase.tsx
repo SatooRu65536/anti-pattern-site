@@ -17,14 +17,27 @@ import { cloneDeep } from "lodash";
 
 const Page: NextPage = () => {
   const router = useRouter();
-  const [addedCart, setAddedCart] = useState(router.query.cart as string[]);
-  const [qty, setQty] = useState(
-    addedCart ? Array(addedCart.length).fill(1) : []
-  );
+  const [addedCart, setAddedCart] = useState<string[]>([]);
+  const [qty, setQty] = useState<number[]>([]);
 
   useEffect(() => {
-    if (!addedCart) Router.push("/");
-  }, [addedCart]);
+    if (!addedCart || !("map" in addedCart)) {
+      Router.push("/");
+      return;
+    }
+
+    const cart = router.query.cart;
+    if (!cart) {
+      Router.push("/");
+    } else if (typeof cart === "string") {
+      setAddedCart([cart]);
+      setQty([1]);
+    } else {
+      setAddedCart(cart);
+      setQty(Array(addedCart.length).fill(1));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function addQty(i: number, addNum: number) {
     const qtySnap = cloneDeep(qty);
@@ -42,16 +55,31 @@ const Page: NextPage = () => {
 
   function toShippingInfoPage() {
     const cart = addedCart.map((itemId, i) => {
-      const item = itemsObj[itemId];
-
       return { id: itemId, qty: qty[i] };
     });
-    window.alert("配送情報の入力に進みます");
 
-    Router.push(
-      { pathname: "/shippinginfo", query: { cart: JSON.stringify(cart) } },
-      "/shippinginfo"
-    );
+    if (addedCart.length > 0 && typeof addedCart[0] === "number") {
+      window.alert("配送情報の入力に進みます");
+
+      Router.push(
+        { pathname: "/shippinginfo", query: { cart: JSON.stringify(cart) } },
+        "/shippinginfo"
+      );
+    } else {
+      window.alert("商品が選択されていません");
+      Router.push("/");
+    }
+  }
+
+  function sum() {
+    if (addedCart.length > 0) {
+      const prices = addedCart.map((itemId, i) => {
+        return itemsObj[itemId].price * qty[i];
+      });
+      return prices.reduce((sum, element) => sum + element, 0);
+    } else {
+      return 0;
+    }
   }
 
   return (
@@ -68,6 +96,7 @@ const Page: NextPage = () => {
         borderRadius="10px"
       >
         {addedCart &&
+          "map" in addedCart &&
           addedCart.map((itemId, i) => {
             const item = itemsObj[itemId];
             if (item === undefined) return <Box key={i}>なし</Box>;
@@ -107,14 +136,16 @@ const Page: NextPage = () => {
                     >
                       {item.detail}
                     </Text>
-                    <Flex>
-                      <Button size="xs" onClick={() => addQty(i, -3)}>
-                        -
-                      </Button>
-                      <Text px="3">{qty[i]}</Text>
-                      <Button size="xs" onClick={() => addQty(i, 5)}>
-                        +
-                      </Button>
+                    <Flex flexWrap="wrap">
+                      <Flex>
+                        <Button size="xs" onClick={() => addQty(i, -3)}>
+                          -
+                        </Button>
+                        <Text px="3">{qty[i]}</Text>
+                        <Button size="xs" onClick={() => addQty(i, 5)}>
+                          +
+                        </Button>
+                      </Flex>
 
                       <Spacer />
 
@@ -128,6 +159,10 @@ const Page: NextPage = () => {
             );
           })}
       </VStack>
+
+      <Heading size="lg" pr="6" textAlign="right">
+        計 ¥{sum().toLocaleString()}
+      </Heading>
 
       <Flex my="10">
         <Spacer />

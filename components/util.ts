@@ -68,7 +68,7 @@ export const items: Item[] = [
     detail: "古びた壁です。縦120mm横240mmとなります。",
     price: 124500,
     imgPath: "/item/bobpc.jpg",
-}
+  }
 ];
 
 export const itemsObj = _.keyBy(items, "id");

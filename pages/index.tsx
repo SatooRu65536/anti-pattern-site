@@ -23,11 +23,15 @@ const Page: NextPage = () => {
   function toPurchase() {
     const res = window.confirm("購入手続きに進みますか?");
 
-    if (res)
+    if (res){
+    if (addedCart.length > 0) {
       Router.push(
         { pathname: "/purchase", query: { cart: addedCart } },
         "/purchase"
       );
+    } else {
+      window.alert("商品が選択されていません")
+    } }
     else setAddedCart([]);
   }
 
