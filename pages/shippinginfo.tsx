@@ -194,6 +194,7 @@ const Page: NextPage = () => {
         <Input
           placeholder="名字"
           w="40%"
+          minW="100px"
           mr="2"
           value={userData.lastName}
           onChange={(e) =>
@@ -206,6 +207,7 @@ const Page: NextPage = () => {
         <Input
           placeholder="名前"
           w="40%"
+          minW="100px"
           value={userData.firstName}
           onChange={(e) =>
             setUserData({
@@ -226,6 +228,7 @@ const Page: NextPage = () => {
         <Input
           placeholder="都道府県"
           w="80%"
+          minW="200px"
           mr="2"
           value={userData.pref}
           onChange={(e) => setUserData({ ...userData, pref: e.target.value })}
@@ -243,6 +246,7 @@ const Page: NextPage = () => {
         <Input
           placeholder="市区町村"
           w="80%"
+          minW="200px"
           mr="2"
           value={userData.city}
           onChange={(e) => setUserData({ ...userData, city: e.target.value })}
@@ -259,6 +263,7 @@ const Page: NextPage = () => {
         <Input
           placeholder="住所"
           w="80%"
+          minW="200px"
           mr="2"
           value={userData.address}
           onChange={(e) =>
@@ -277,6 +282,7 @@ const Page: NextPage = () => {
         <Input
           placeholder="建物名"
           w="80%"
+          minW="200px"
           mr="2"
           value={userData.build}
           onChange={(e) => setUserData({ ...userData, build: e.target.value })}
@@ -294,6 +300,7 @@ const Page: NextPage = () => {
         <Input
           placeholder="郵便番号"
           w="80%"
+          minW="200px"
           mr="2"
           value={userData.postCode}
           onChange={(e) =>
@@ -312,6 +319,7 @@ const Page: NextPage = () => {
         <Input
           placeholder="電話番号"
           w="80%"
+          minW="200px"
           mr="2"
           value={userData.phone}
           onChange={(e) => setUserData({ ...userData, phone: e.target.value })}

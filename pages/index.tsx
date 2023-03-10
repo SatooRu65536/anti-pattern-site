@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Router from "next/router";
 import { Box, Flex, Grid, Spacer, Text } from "@chakra-ui/react";
-import { items } from "@/components/util";
+import { items, time } from "@/components/util";
 import ItemCard from "@/components/Card";
+import { useRecoilState } from "recoil";
 
 const Page: NextPage = () => {
   const [addedCart, setAddedCart] = useState<string[]>([]);
+  const [startTime, setStartTime] = useRecoilState(time);
 
   function switchCartItem(itemId: string, forceRemove = false) {
     if (addedCart.includes(itemId) || forceRemove) {
@@ -23,17 +25,21 @@ const Page: NextPage = () => {
   function toPurchase() {
     const res = window.confirm("購入手続きに進みますか?");
 
-    if (res){
-    if (addedCart.length > 0) {
-      Router.push(
-        { pathname: "/purchase", query: { cart: addedCart } },
-        "/purchase"
-      );
-    } else {
-      window.alert("商品が選択されていません")
-    } }
-    else setAddedCart([]);
+    if (res) {
+      if (addedCart.length > 0) {
+        Router.push(
+          { pathname: "/purchase", query: { cart: addedCart } },
+          "/purchase"
+        );
+      } else {
+        window.alert("商品が選択されていません");
+      }
+    } else setAddedCart([]);
   }
+
+  useEffect(() => {
+    setStartTime(new Date().getTime());
+  }, [setStartTime]);
 
   return (
     <Box minH="calc(100vh - 122px)">

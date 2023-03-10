@@ -1,3 +1,4 @@
+import { atom } from "recoil";
 import { Item } from "./types";
 import _ from "lodash";
 
@@ -72,3 +73,8 @@ export const items: Item[] = [
 ];
 
 export const itemsObj = _.keyBy(items, "id");
+
+export const time = atom({
+  key: "time",
+  default: 0
+})

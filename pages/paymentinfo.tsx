@@ -1,23 +1,54 @@
 import { NextPage } from "next";
 import Router, { useRouter } from "next/router";
-import { Box, Flex, Heading, Input, Spacer, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Input,
+  Spacer,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
 
 const Page: NextPage = () => {
-  const [userData, setUserData] = useState({
-    firstName: "名前",
-    lastName: "名字",
-    pref: "都道府県",
-    city: "市区町村",
-    address: "住所",
-    build: "建物名",
-    postCode: "xxx-xxxx",
-    phone: "xxx-xxxx-xxxx",
+  const [payData, setPayData] = useState({
+    cardNum: "xxxx-xxxx-xxxx-xxxx",
+    expiry: "xx/xx",
+    securityCode: "xxx",
   });
   const [errMsg, setErrMsg] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
-  function toPaymentInfoPage() {
-    if (errMsg === "") Router.push("/paymentinfo");
+  function submit() {
+    if (!payData.cardNum.match(/\d{4}-\d{4}-\d{4}-\d{4}/))
+      setErrMsg("正しく入力してください");
+    else if (payData.cardNum === "") setErrMsg("必須項目が入力されていません");
+    else if (!payData.expiry.match(/\d{2}\/\d{2}/))
+      setErrMsg("正しく入力してください");
+    else if (payData.expiry === "") setErrMsg("必須項目が入力されていません");
+    else if (!payData.securityCode.match(/\d{3}/))
+      setErrMsg("正しく入力してください");
+    else if (payData.securityCode === "")
+      setErrMsg("必須項目が入力されていません");
+    else {
+      Router.push("/completion");
+      return;
+    }
+
+    setPayData({
+      cardNum: "xxxx-xxxx-xxxx-xxxx",
+      expiry: "xx/xx",
+      securityCode: "xxx",
+    });
   }
 
   useEffect(() => {
@@ -29,6 +60,35 @@ const Page: NextPage = () => {
 
   return (
     <Box minH="calc(100vh - 122px)" p="4">
+      <AlertDialog
+        isOpen={isOpen}
+        onClose={onClose}
+        leastDestructiveRef={cancelRef}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              注意
+            </AlertDialogHeader>
+
+            <AlertDialogBody>購入をキャンセルしますか？</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                onClick={() => {
+                  Router.push("/");
+                }}
+              >
+                はい
+              </Button>
+              <Button colorScheme="red" ml={3} onClick={onClose}>
+                キャンセル
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
       <Flex my="4">
         <Spacer />
         <Text
@@ -46,7 +106,7 @@ const Page: NextPage = () => {
           _hover={{
             boxShadow: "2xl",
           }}
-          onClick={toPaymentInfoPage}
+          onClick={onOpen}
         >
           キャンセルする
         </Text>
@@ -64,7 +124,7 @@ const Page: NextPage = () => {
           cursor="pointer"
           transition="all .3s"
           _hover={{ boxShadow: "2xl", bgColor: "red.500" }}
-          onClick={() => Router.push("/")}
+          onClick={submit}
         >
           購入を完了する
         </Text>
@@ -76,31 +136,65 @@ const Page: NextPage = () => {
 
       <Box p="4">
         <Heading size="sm" mb="2">
-          氏名
+          カード番号
           <Text as="span" fontSize="sm" color="red" ml="2">
             必須
           </Text>
         </Heading>
         <Input
-          placeholder="名字"
-          w="40%"
+          placeholder="カード番号"
+          w="80%"
+          minW="200px"
           mr="2"
-          value={userData.lastName}
+          value={payData.cardNum}
           onChange={(e) =>
-            setUserData({
-              ...userData,
-              lastName: e.target.value,
+            setPayData({
+              ...payData,
+              cardNum: e.target.value,
             })
           }
         />
+      </Box>
+
+      <Box p="4">
+        <Heading size="sm" mb="2">
+          有効期限
+          <Text as="span" fontSize="sm" color="red" ml="2">
+            必須
+          </Text>
+        </Heading>
         <Input
-          placeholder="名前"
-          w="40%"
-          value={userData.firstName}
+          placeholder="MM/YY"
+          w="80%"
+          minW="200px"
+          mr="2"
+          value={payData.expiry}
           onChange={(e) =>
-            setUserData({
-              ...userData,
-              firstName: e.target.value,
+            setPayData({
+              ...payData,
+              expiry: e.target.value,
+            })
+          }
+        />
+      </Box>
+
+      <Box p="4">
+        <Heading size="sm" mb="2">
+          セキュリティコード
+          <Text as="span" fontSize="sm" color="red" ml="2">
+            必須
+          </Text>
+        </Heading>
+        <Input
+          placeholder="セキュリティコード"
+          w="80%"
+          minW="200px"
+          mr="2"
+          value={payData.securityCode}
+          onChange={(e) =>
+            setPayData({
+              ...payData,
+              securityCode: e.target.value,
             })
           }
         />
